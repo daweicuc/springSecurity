@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>index</title>
+</head>
+<body>
+<body>
+<!-- 提示 -->
+<h3 th:text="${info}"></h3>
+<div>
+    <!-- 后面添加参数起到清除缓存作用 -->
+    <img alt="验证码" onclick="this.src='/login/getCode?d='+new Date()*1" src="/login/getCode" />
+</div>
+<form action="checkCode" >
+    <input type="text" name="code" />
+    <input type="submit" value="提交" class="btn btn-success"></input>
+</form>
+</body>
+</body>
+</html>
