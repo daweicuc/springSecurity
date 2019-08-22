@@ -29,10 +29,11 @@ public class LoginController {
     public void defaultKaptcha(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws Exception{
         byte[] captchaChallengeAsJpeg = null;
         ByteArrayOutputStream jpegOutputStream = new ByteArrayOutputStream();
-        System.out.println("getCode");
+        System.out.println("获取验证码");
         try {
             //生产验证码字符串并保存到session中
             String createText = defaultKaptcha.createText();
+            System.out.println("生成的验证码是："+createText);
             httpServletRequest.getSession().setAttribute("vrifyCode", createText);
             //使用生产的验证码字符串返回一个BufferedImage对象并转为byte写入到byte数组中
             BufferedImage challenge = defaultKaptcha.createImage(createText);
@@ -53,18 +54,18 @@ public class LoginController {
         responseOutputStream.flush();
         responseOutputStream.close();
     }
-    //验证码验证
-    @RequestMapping("/checkCode")
-    @ResponseBody
-    public boolean imgvrifyControllerDefaultKaptcha(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
-        String captchaId = (String) httpServletRequest.getSession().getAttribute("vrifyCode");
-        String parameter = httpServletRequest.getParameter("code");
-        System.out.println("Session  vrifyCode ---->"+captchaId+"---- form code --->"+parameter);
-        if (!captchaId.equals(parameter)) {
-            System.out.println("验证码错误");
-            return false;
-        } else {
-            return true;
-        }
-    }
+    //下面方法可以用来验证码的验证
+//    @RequestMapping("/checkCode")
+//    @ResponseBody
+//    public boolean imgvrifyControllerDefaultKaptcha(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+//        String captchaId = (String) httpServletRequest.getSession().getAttribute("vrifyCode");
+//        String parameter = httpServletRequest.getParameter("code");
+//        System.out.println("Session  vrifyCode ---->"+captchaId+"---- form code --->"+parameter);
+//        if (!captchaId.equals(parameter)) {
+//            System.out.println("验证码错误");
+//            return false;
+//        } else {
+//            return true;
+//        }
+//    }
 }

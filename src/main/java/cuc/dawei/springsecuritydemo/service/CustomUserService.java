@@ -33,7 +33,9 @@ public class CustomUserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        获取用户的信息
         UserSecurity user=userMapper.findByUserName(username);
+//        获取用户的权限等信息
         if(user!=null){
             List<PermissionSecurity> permissions=permissionMapper.findByAdminUserId(user.getId());
             List<GrantedAuthority> grantedAuthorities=new ArrayList<>();
@@ -41,12 +43,10 @@ public class CustomUserService implements UserDetailsService {
                 if(permission!=null&&permission.getName()!=null){
                     GrantedAuthority grantedAuthority=new SimpleGrantedAuthority(permission.getName());
                     grantedAuthorities.add(grantedAuthority);
-                    System.out.println("用户名："+user.getUsername()+"  密码："+user.getPassword()+"权限："+grantedAuthorities);
                 }
             }
-
+            System.out.println("用户名："+user.getUsername()+"  密码："+user.getPassword()+"权限："+grantedAuthorities);
             return new User(user.getUsername(),user.getPassword(),grantedAuthorities);
-
         }else{
             throw new UsernameNotFoundException("admin"+username+"do not exist!");
         }

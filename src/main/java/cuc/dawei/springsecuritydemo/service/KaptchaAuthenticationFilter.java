@@ -14,8 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -24,10 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * 继承 UsernamePasswordAuthenticationFilter 实现自定义登录
- * 使用LoginAuthenticationFilter替换原有的用户名密码认证凡是，需要删除http.formLogin，因为http.formLogin会创建一个LoginAuthenticationFilter
- */
 public class KaptchaAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
     private String servletPath;
     public KaptchaAuthenticationFilter(String servletPath, String failureUrl) {

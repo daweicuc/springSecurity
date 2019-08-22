@@ -6,23 +6,14 @@ import cuc.dawei.springsecuritydemo.service.MyFilterSecurityInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.authentication.LockedException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.*;
-import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @ClassName WebSecurityConfig
@@ -40,7 +31,8 @@ import java.util.Map;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private MyFilterSecurityInterceptor myFilterSecurityInterceptor;
-//    @Bean
+//如果引用其他加密算法，可用此方法调用MyPasswordEncoder()来实现----MD5
+    //    @Bean
 //    public PasswordEncoder myPasswordEncoder() {
 //        return new MyPasswordEncoder();
 //    }
@@ -55,27 +47,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         Auth.userDetailsService(customUserService1()).passwordEncoder(new BCryptPasswordEncoder());
         System.out.println("user Detail验证："+Auth.userDetailsService(customUserService1()).passwordEncoder(new BCryptPasswordEncoder()));
     }
-    //        auth.userDetailsService(customUserService()); //user Details Service验证
+    //auth.userDetailsService(customUserService()); //user Details Service验证
     /**有以下几种形式，使用第3种*/
-    //inMemoryAuthentication 从内存中获取
-//        auth.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder()).withUser("user1").password(new BCryptPasswordEncoder().encode("123123")).roles("USER");
-
-    //jdbcAuthentication从数据库中获取，但是默认是以security提供的表结构
+    //1）.inMemoryAuthentication 从内存中获取
+    // auth.inMemoryAuthentication().passwordEncoder(new BCryptPasswordEncoder()).withUser("user1").password(new BCryptPasswordEncoder().encode("123123")).roles("USER");
+    //2）.jdbcAuthentication从数据库中获取，但是默认是以security提供的表结构
     //usersByUsernameQuery 指定查询用户SQL
     //authoritiesByUsernameQuery 指定查询权限SQL
     //auth.jdbcAuthentication().dataSource(dataSource).usersByUsernameQuery(query).authoritiesByUsernameQuery(query);
-    //注入userDetailsService，需要实现userDetailsService接口
+    //3).注入userDetailsService，需要实现userDetailsService接口
 
     @Override
     public void configure(HttpSecurity http) throws Exception{
         http
-                .csrf().disable()
-//                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
-//                .and()
                 .addFilterBefore(new KaptchaAuthenticationFilter("/login", "/login?error"), UsernamePasswordAuthenticationFilter.class) //在认证用户名之前认证验证码，如果验证码错误，将不执行用户名和密码的认证
                 // 所有用户均可访问的资源
                 .authorizeRequests()
-                .antMatchers( "/favicon.ico","/css/**","/common/**","/getCode","/js/**","/images/**","/login/**","/login","/checkCode","/login-error").permitAll()
+                .antMatchers( "/favicon.ico","/css/**","/common/**","/js/**","/images/**","/login/**","/login","/login-error").permitAll()
                 .anyRequest().authenticated()//任何请求,登录后可以访问
                 .and()
                 .formLogin()
@@ -110,44 +98,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .httpBasic();*/
 
     }
-//    /**
-//     * 需要显示声明该Bean
-//     * @return
-//     * @throws Exception
-//     */
-//    @Bean
-//    @Override
-//    public AuthenticationManager authenticationManagerBean() throws Exception {
-//        return super.authenticationManagerBean();
-//    }
-//
-//
-//    /*声明LoginAuthenticationFilter Bean*/
-//    @Bean
-//    public LoginAuthenticationFilter loginAuthenticationFilter() throws Exception {
-//        LoginAuthenticationFilter loginAuthenticationFilter=new LoginAuthenticationFilter();
-//        loginAuthenticationFilter.setAuthenticationManager(authenticationManagerBean());
-//        loginAuthenticationFilter.setFilterProcessesUrl("/authentication");
-//        loginAuthenticationFilter.setAuthenticationSuccessHandler(new SavedRequestAwareAuthenticationSuccessHandler());
-//        loginAuthenticationFilter.setAuthenticationFailureHandler(authenticationFailureHandler());
-//        return loginAuthenticationFilter;
-//    }
-//
-//    /*声明登录endpoint Bean*/
-//    @Bean
-//    public LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint(){
-//        LoginUrlAuthenticationEntryPoint loginUrlAuthenticationEntryPoint=new LoginUrlAuthenticationEntryPoint("/login");
-//        return loginUrlAuthenticationEntryPoint;
-//    }
-//
-//
-//
-//    /*声明授权失败异常处理 Bean*/
-//    @Bean
-//    public AuthenticationFailureHandler authenticationFailureHandler() {
-//        //根据抛出的不同的异常跳转到不同的URL
-//        return authenticationFailureHandler();
-//    }
-
-
 }

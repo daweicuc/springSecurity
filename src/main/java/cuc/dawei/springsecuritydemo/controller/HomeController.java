@@ -2,12 +2,8 @@ package cuc.dawei.springsecuritydemo.controller;
 
 import cuc.dawei.springsecuritydemo.entity.MsgSecurity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.ModelAndView;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * @ClassName HomeController
@@ -27,10 +23,12 @@ public class HomeController {
     }
     @RequestMapping("/login")
     public String login(){
+        System.out.println("登陆login页面");
         return "login";
     }
     @RequestMapping("/index")
     public String index1(){
+        System.out.println("登陆index页面");
         return "index";
     }
     @RequestMapping("/user/list")
